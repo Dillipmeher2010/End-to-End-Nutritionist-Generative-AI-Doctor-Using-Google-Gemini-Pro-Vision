@@ -5,19 +5,32 @@ import google.generativeai as genai
 from PIL import Image
 
 # Load environment variables
-load_dotenv()  # This will load your API key from .env
+load_dotenv()
 
 # Configure the Google Generative AI API
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Function to get the Google Gemini response
 def get_gemini_response(input_text, image_data, prompt):
-    response = genai.generate_text(
-        model="gemini-pro-vision",  # Correct model name
-        prompt=prompt,
-        examples=[input_text, image_data],
-    )
-    return response['text']  # Modify according to the actual SDK response format
+    try:
+        st.write(f"Input Text: {input_text}")  # Debugging log
+        st.write(f"Image Data: {image_data}")  # Debugging log
+        st.write(f"Prompt: {prompt}")  # Debugging log
+        
+        # Attempt to use the generate_text method
+        response = genai.generate_text(
+            model="gemini-pro-vision",  # Make sure this model name is correct
+            prompt=prompt,
+            examples=[input_text, image_data],  # Check if this format is correct
+        )
+        st.write(f"Response: {response}")  # Debugging log
+        return response['text']  # Modify this based on the actual response structure
+    except AttributeError as e:
+        st.error("AttributeError: Check if the SDK function or model name is correct.")
+        st.write(f"Error details: {e}")  # Display the error in the Streamlit app
+    except Exception as e:
+        st.error("An unexpected error occurred.")
+        st.write(f"Error details: {e}")
 
 # Function to handle image uploads
 def input_image_setup(uploaded_file):
@@ -64,7 +77,11 @@ input_prompt = """
 
 # When submit button is clicked
 if submit:
-    image_data = input_image_setup(uploaded_file)
-    response = get_gemini_response(input_text, image_data, input_prompt)
-    st.subheader("The Response is")
-    st.write(response)
+    try:
+        image_data = input_image_setup(uploaded_file)
+        response = get_gemini_response(input_text, image_data, input_prompt)
+        st.subheader("The Response is")
+        st.write(response)
+    except Exception as e:
+        st.error("An error occurred while processing the request.")
+        st.write(f"Error details: {e}")
