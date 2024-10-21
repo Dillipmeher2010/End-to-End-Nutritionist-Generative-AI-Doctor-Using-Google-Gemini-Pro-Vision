@@ -6,21 +6,21 @@ import google.generativeai as genai
 from PIL import Image
 
 # Load environment variables
-load_dotenv()  # load all the environment variables
+load_dotenv()  # Load all the environment variables
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Function to get the Google Gemini response
 def get_gemini_response(input_text, image_data, prompt):
     try:
         st.write(f"Input Text: {input_text}")  # Debugging log
-        st.write(f"Image Data: {image_data}")  # Debugging log
-        st.write(f"Prompt: {prompt}")  # Debugging log
+        st.write(f"Image Data Length: {len(image_data)}")  # Log the length of image data
         
         # Attempt to use the generate_text method
         response = genai.generate_text(
             model="gemini-pro-vision",  # Ensure this model name is correct
             prompt=prompt,
-            examples=[input_text, image_data],  # Check if this format is correct
+            examples=[input_text],  # Use input_text as an example
+            image_data=image_data  # Pass the image data here
         )
         
         # Debugging: Log the entire response
@@ -28,8 +28,8 @@ def get_gemini_response(input_text, image_data, prompt):
         st.write(response)  # Log the raw response to understand its structure
 
         # Now try to access the response text
-        if 'text' in response:
-            return response['text']  # Modify this based on the actual response structure
+        if hasattr(response, 'text'):
+            return response.text  # Modify this based on the actual response structure
         else:
             st.error("Response does not contain 'text'. Full response:")
             st.write(response)  # Display the entire response if 'text' is missing
@@ -70,9 +70,8 @@ if uploaded_file is not None:
 submit = st.button("Tell me the total calories")
 
 input_prompt = """
-You are an expert in nutrition where you need to see the food items from the image
-and calculate the total calories, also provide the details of every food item with calorie intake
-in the following format:
+You are an expert in nutrition. Analyze the food items in the image and calculate the total calories, 
+providing details for each food item with calorie intake in the following format:
 
 1. Item 1 - number of calories
 2. Item 2 - number of calories
