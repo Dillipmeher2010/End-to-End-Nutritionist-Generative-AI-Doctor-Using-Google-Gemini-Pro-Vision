@@ -48,15 +48,18 @@ if uploaded_file is not None:
 
 submit=st.button("Tell me the total calories")
 
-input_prompt="""
-You are an expert in nutritionist where you need to see the food items from the image
-               and calculate the total calories, also provide the details of every food items with calories intake
-               is below format
+input_prompt = """
+You are an expert nutritionist. Analyze the food items from the image 
+and calculate the total calories. Provide the details of each food item with 
+caloric intake in the following format:
 
-               1. Item 1 - no of calories
-               2. Item 2 - no of calories
-               ----
-               ----
+1. Item 1 - number of calories - Nutritious (Yes/No) - Health benefits
+2. Item 2 - number of calories - Nutritious (Yes/No) - Health benefits
+...
+Total calories: [total calories]
+
+Additionally, provide the recommended daily intake for an average adult and specify 
+if these food items contribute positively to a healthy diet. Are they suitable for a balanced diet?
 
 
 """
