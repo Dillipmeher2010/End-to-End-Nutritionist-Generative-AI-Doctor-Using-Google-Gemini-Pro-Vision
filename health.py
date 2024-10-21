@@ -13,12 +13,12 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # Function to call Google Gemini API and get response
 def get_gemini_response(prompt, image_data):
     try:
-        # Directly call generate_text method (based on latest API usage)
-        response = genai.generate_text(
+        # Using generate_content method as an alternative to generate_text
+        response = genai.generate_content(
             prompt=prompt, 
             images=[image_data]
         )
-        return response.candidates[0]['output']
+        return response  # Adjusting based on API structure
     
     except Exception as e:
         st.error(f"Error occurred: {e}")
