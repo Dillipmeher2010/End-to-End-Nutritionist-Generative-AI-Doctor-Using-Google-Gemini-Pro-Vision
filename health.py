@@ -7,21 +7,18 @@ from PIL import Image
 # Load environment variables
 load_dotenv()
 
-# Configure Google Gemini API
+# Configure Google Gemini API with the correct key
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 # Function to call Google Gemini API and get response
 def get_gemini_response(prompt, image_data):
     try:
-        # This is how you get the model using generativeai
-        model = genai.models.get_model('gemini-pro-vision')  # Correct the model initialization
-        
-        # Call generate_content method with proper input
-        response = model.generate_content(
-            input_text=prompt,
-            image=[image_data]  # Ensure image data is passed as a list
+        # Directly call generate_text method (based on latest API usage)
+        response = genai.generate_text(
+            prompt=prompt, 
+            images=[image_data]
         )
-        return response.text
+        return response.candidates[0]['output']
     
     except Exception as e:
         st.error(f"Error occurred: {e}")
