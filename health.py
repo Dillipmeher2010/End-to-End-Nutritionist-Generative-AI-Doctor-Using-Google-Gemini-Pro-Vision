@@ -7,32 +7,31 @@ import streamlit as st
 import os
 import google.generativeai as genai
 from PIL import Image
+import base64
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-## Function to load Google Gemini Pro Vision API And get response
-def get_gemini_response(user_input, image, prompt):
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    response = model.generate_content([user_input, image[0], prompt])
-    return response.text
+## Function to load Google Gemini Pro Vision API and get response
+def get_gemini_response(user_input, image_data, prompt):
+    try:
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        # Pass the input and prompt as plain text, with the image encoded if required
+        response = model.generate_content([user_input, prompt])
+        return response.text
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return None
 
 def input_image_setup(uploaded_file):
-    # Check if a file has been uploaded
     if uploaded_file is not None:
-        # Read the file into bytes
+        # Convert the image to base64 encoding to meet API expectations
         bytes_data = uploaded_file.getvalue()
-
-        image_parts = [
-            {
-                "mime_type": uploaded_file.type,  # Get the mime type of the uploaded file
-                "data": bytes_data
-            }
-        ]
-        return image_parts
+        encoded_image = base64.b64encode(bytes_data).decode("utf-8")
+        return encoded_image
     else:
         raise FileNotFoundError("No file uploaded")
     
-## Initialize our Streamlit app
+## Initialize Streamlit app
 st.set_page_config(page_title="Gemini Health App")
 
 st.header("Gemini Health App")
@@ -63,5 +62,6 @@ if these food items contribute positively to a healthy diet. Are they suitable f
 if submit:
     image_data = input_image_setup(uploaded_file)
     response = get_gemini_response("Analyze image", image_data, input_prompt)  # Adjusted argument usage
-    st.subheader("The Response is")
-    st.write(response)
+    if response:
+        st.subheader("The Response is")
+        st.write(response)
