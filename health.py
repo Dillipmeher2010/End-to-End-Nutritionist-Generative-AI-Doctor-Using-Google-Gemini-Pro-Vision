@@ -19,7 +19,7 @@ def get_gemini_response(user_input: str, image_data: str, prompt: str):
             contents=[{"content": user_input}, {"content": prompt}],
             image_data=image_data  # Assuming image data is in base64
         )
-        return response.text
+        return response.text  # Ensure this returns a string
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return None
@@ -67,6 +67,10 @@ submit = st.button("Tell me the total calories")
 # Execute if submit button is clicked
 if submit and image_data:
     response = get_gemini_response("Analyze image", image_data, input_prompt)
-    if response:
+    
+    # Debugging response
+    if response is None:
+        st.error("Failed to get a valid response.")
+    else:
         st.subheader("The Response is")
         st.write(response)
