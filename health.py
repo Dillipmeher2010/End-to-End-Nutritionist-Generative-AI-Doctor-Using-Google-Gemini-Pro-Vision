@@ -1,5 +1,4 @@
 # health.py
-### Health Management APP
 from dotenv import load_dotenv
 load_dotenv()  # load all the environment variables
 
@@ -9,29 +8,33 @@ import google.generativeai as genai
 from PIL import Image
 import base64
 
+# Configure API Key
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-## Function to load Google Gemini Pro Vision API and get response
+# Function to load Google Gemini Pro Vision API and get response
 def get_gemini_response(user_input, image_data, prompt):
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        # Pass the input and prompt as plain text, with the image encoded if required
-        response = model.generate_content([user_input, prompt])
+        # Initialize the model and generate content
+        response = genai.generate_content(
+            model='gemini-1.5-flash',
+            contents=[{"content": user_input}, {"content": prompt}],
+            image_data=image_data  # Assuming image data is encoded
+        )
         return response.text
     except Exception as e:
         st.error(f"An error occurred: {e}")
         return None
 
+# Image encoding function for API compatibility
 def input_image_setup(uploaded_file):
     if uploaded_file is not None:
-        # Convert the image to base64 encoding to meet API expectations
         bytes_data = uploaded_file.getvalue()
         encoded_image = base64.b64encode(bytes_data).decode("utf-8")
         return encoded_image
     else:
         raise FileNotFoundError("No file uploaded")
-    
-## Initialize Streamlit app
+
+# Streamlit app setup
 st.set_page_config(page_title="Gemini Health App")
 
 st.header("Gemini Health App")
@@ -58,10 +61,10 @@ Additionally, provide the recommended daily intake for an average adult and spec
 if these food items contribute positively to a healthy diet. Are they suitable for a balanced diet?
 """
 
-## If submit button is clicked
+# Execute if submit button is clicked
 if submit:
     image_data = input_image_setup(uploaded_file)
-    response = get_gemini_response("Analyze image", image_data, input_prompt)  # Adjusted argument usage
+    response = get_gemini_response("Analyze image", image_data, input_prompt)
     if response:
         st.subheader("The Response is")
         st.write(response)
