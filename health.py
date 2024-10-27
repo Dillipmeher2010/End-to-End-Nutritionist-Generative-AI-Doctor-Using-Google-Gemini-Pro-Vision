@@ -55,11 +55,6 @@ You are a nutrition expert. Analyze the food items shown in the image, identify 
 2. [Food Item 2] - [Approximate Calories]
 ...
 
-Also, assess whether each food item is healthy or unhealthy. If any item is high in sugars, saturated fats, or refined carbs, suggest limiting its intake.
-
-Additional requirements:
-- Provide an estimated daily calorie requirement, noting it varies by age, gender, and activity level.
-- Offer one or two tips for a balanced diet and healthy lifestyle.
 
 """
 
