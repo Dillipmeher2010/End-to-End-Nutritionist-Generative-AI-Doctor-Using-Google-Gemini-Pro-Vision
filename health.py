@@ -49,17 +49,29 @@ if uploaded_file is not None:
 submit=st.button("Tell me the total calories")
 
 input_prompt="""
-You are an expert in nutritionist where you need to see the food items from the image
-               and calculate the total calories, also provide the details of every food items with calories intake
-               is below format
+input_prompt = """
+You are a nutrition expert analyzing food items from an image. Your task is to identify each food item, estimate its calorie count, and provide a detailed breakdown of calories. Follow these steps carefully:
 
-               1. Item 1 - no of calories
-               2. Item 2 - no of calories
-               ----
-               ----
-
-
+1. **Food Item Identification and Calorie Calculation:**
+   - Identify each visible food item in the image.
+   - Calculate the approximate calories for each item, providing values in the following format:
+     
+     1. [Food Item 1] - [Approximate Calories]
+     2. [Food Item 2] - [Approximate Calories]
+     ...
+   
+2. **Total Calorie Count:**
+   - Sum the individual calorie counts to calculate the **total calories** for the entire meal or food spread shown in the image.
+   
+3. **Health Assessment:**
+   - For each item, assess if it is generally healthy or unhealthy based on nutritional content (e.g., high in sugars, fats, or refined carbs).
+   - Clearly indicate any items that should be limited or avoided due to high levels of unhealthy ingredients.
+   
+4. **Daily Caloric Needs and Nutritional Tips:**
+   - Based on general dietary guidelines, provide a recommendation for daily caloric intake, considering factors such as age, gender, and activity level.
+   - Share one or two **health tips** for a balanced diet, including advice for incorporating more nutrient-dense foods and maintaining a healthy lifestyle.
 """
+
 
 ## If submit button is clicked
 
